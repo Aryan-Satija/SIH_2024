@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Input, Button, message } from 'antd';
-
-const CreatePassword = ({ onPasswordSubmit }) => {
+import CryptoJS from 'crypto-js';
+import { useNavigate } from 'react-router-dom';
+const CreatePassword = ({ seedPhrase }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+  const navigate = useNavigate();
   const handleSubmit = () => {
     if (password === '' || confirmPassword === '') {
       message.error('Please fill in both fields.');
@@ -16,8 +17,10 @@ const CreatePassword = ({ onPasswordSubmit }) => {
       return;
     }
 
-    message.success('Password created successfully!');
-    onPasswordSubmit(password);
+    const encryptedSeedPhrase = CryptoJS.AES.encrypt(seedPhrase, password).toString();
+    localStorage.setItem('encryptedWallet', encryptedSeedPhrase);
+
+    navigate('/wallet');
   };
 
   return (
@@ -28,7 +31,7 @@ const CreatePassword = ({ onPasswordSubmit }) => {
           placeholder="Enter password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ marginBottom: '16px' }}
+          style={{ marginBottom: '12px' }}
         />
       </div>
       <div className="input-field">
@@ -36,7 +39,7 @@ const CreatePassword = ({ onPasswordSubmit }) => {
           placeholder="Confirm password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          style={{ marginBottom: '16px' }}
+          style={{ marginBottom: '12px' }}
         />
       </div>
       <Button type="primary" onClick={handleSubmit}>

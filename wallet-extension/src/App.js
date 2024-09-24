@@ -8,6 +8,7 @@ import Wallet from './components/wallet';
 import Apophis_logo from './assets/apophis.jpg';
 import Kyc from './components/kyc';
 import CreatePassword from './components/createPassword';
+import Signin from './components/signin';
 function App() {
   const [wallet, setWallet] = useState(null);
   const [seedPhrase, setSeedPhrase] = useState(null);
@@ -45,12 +46,13 @@ function App() {
       {
         wallet && seedPhrase ? <Routes>
             <Route path={"/wallet"} element={<Wallet wallet={wallet} seedPhrase={seedPhrase} setSeedPhrase={setSeedPhrase} setWallet={setWallet} selectedChain={selectedChain}/>}/>
-            <Route path={"/password"} element={<CreatePassword/>}/>
+            <Route path={"/password"} element={<CreatePassword seedPhrase={seedPhrase}/>}/>
         </Routes> : <Routes>
           <Route path={"/"} element={<Home/>}/>
           <Route path={"/recover"} element={<RecoverWallet setSeedPhrase={setSeedPhrase} setWallet={setWallet}/>}/>
           <Route path={"/kyc"} element={<Kyc/>}/>
           <Route path={"/wallet"} element={<CreateWallet setSeedPhrase={setSeedPhrase} setWallet={setWallet}/>}/>
+          <Route path={"/signin"} element={<Signin setSeedPhrase={setSeedPhrase} setWallet={setWallet}/>}/>
         </Routes>
       }
     </div>

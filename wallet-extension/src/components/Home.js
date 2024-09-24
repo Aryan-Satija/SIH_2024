@@ -22,7 +22,7 @@ const Home = () => {
             </Button>
             <Button
                 onClick={()=>{
-                    navigate("/recover");
+                    navigate("/signin");
                 }}
                 type='default'
             >
