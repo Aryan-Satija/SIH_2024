@@ -51,6 +51,9 @@ const Wallet = ({
   else if(selectedChain === '0xa86a'){
     chain = 'Avalanche';
   }
+  else if(selectedChain === '0xAA36A7'){
+    chain = 'Sepolia Eth';
+  }
 
   const items = [
     {
