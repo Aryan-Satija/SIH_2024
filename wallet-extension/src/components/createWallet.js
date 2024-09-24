@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
-import { Button, Card, message } from 'antd';
-
+import { Button, Card, Input, message } from 'antd';
+import "../App.css";
 const CreateWallet = ({ setSeedPhrase, setWallet }) => {
     const [newSeedPhrase, setNewSeedPhrase] = useState(null);
     const navigate = useNavigate();
@@ -13,9 +13,10 @@ const CreateWallet = ({ setSeedPhrase, setWallet }) => {
     };
 
     const finalizeWallet = () => {
+        const wallet = ethers.Wallet.fromPhrase(newSeedPhrase);
         setSeedPhrase(newSeedPhrase);
-        setWallet(ethers.Wallet.fromPhrase(newSeedPhrase).address);
-        navigate("/wallet");
+        setWallet(wallet.address); 
+        navigate("/password");
     };
 
     const copyToClipboard = () => {
@@ -30,8 +31,7 @@ const CreateWallet = ({ setSeedPhrase, setWallet }) => {
     return (
         <div>
             <div className='text-[#faad14] mt-4 bg-[#fffbe6] border-1 border-[#ffe58f] p-[5px] display-flex flex-start items-center text-sm'>
-                Once you generate the seed phrase, save it securely in order to
-                recover your wallet in the future.
+                Once you generate the seed phrase, save it securely in order to recover your wallet in the future.
             </div>
             <div className='w-full flex flex-col items-start mt-16 pl-2'>
                 {newSeedPhrase && (
@@ -45,22 +45,22 @@ const CreateWallet = ({ setSeedPhrase, setWallet }) => {
                 <div className='h-[200px] mb-2 px-2'>
                     <Card className='p-[5px] '>
                         {
-                            newSeedPhrase && <div className='flex flex-col items-center justify-center gap-4'>
-                                <div className='flex flex-row items-center gap-4 justify-center'>
+                            newSeedPhrase && <div className='flex flex-col items-center justify-center gap-4 fade-in'>
+                                <div className='flex flex-row items-center gap-2 justify-center'>
                                     {
                                         newSeedPhrase.split(" ").slice(0, 4).map((phrase) => {
                                             return <span className='bg-blue-400/40 px-2 text-blue-700 rounded-full'>{phrase}</span>
                                         })
                                     }
                                 </div>
-                                <div className='flex flex-row items-center gap-4 justify-center'>
+                                <div className='flex flex-row items-center gap-2 justify-center'>
                                     {
                                         newSeedPhrase.split(" ").slice(4, 8).map((phrase) => {
                                             return <span className='bg-blue-400/40 px-2 text-blue-700 rounded-full'>{phrase}</span>
                                         })
                                     }
                                 </div>
-                                <div className='flex flex-row items-center gap-4 justify-center'>
+                                <div className='flex flex-row items-center gap-2 justify-center'>
                                     {
                                         newSeedPhrase.split(" ").slice(8, 12).map((phrase) => {
                                             return <span className='bg-blue-400/40 px-2 text-blue-700 rounded-full'>{phrase}</span>

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Form, Input, Button, Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-
+import { useNavigate } from 'react-router-dom';
 const Kyc = () => {
+  const navigate = useNavigate();
+
   const onFinish = (values) => {
     console.log('KYC form submitted:', values);
     message.success('KYC submitted successfully!');
@@ -65,17 +67,19 @@ const Kyc = () => {
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
-            <p className="ant-upload-text">
+            <p className="ant-upload-text text-sm">
               Click or drag file to this area to upload
             </p>
-            <p className="ant-upload-hint">
+            <p className="ant-upload-hint text-xs">
               Upload a government-issued ID (e.g., passport, driving license)
             </p>
           </Upload.Dragger>
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" block onClick={()=>{
+                navigate("/wallet")
+          }}>
             Submit KYC
           </Button>
         </Form.Item>
