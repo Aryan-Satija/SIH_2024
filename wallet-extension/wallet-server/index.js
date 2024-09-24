@@ -41,6 +41,6 @@ Moralis.start({
     apiKey : process.env.MORALIS_API
 }).then(()=>{
     app.listen(port, ()=>{
-        console.log(`istening at -> ${port}`)
+        console.log(`listening at -> ${port}`)
     })
 })

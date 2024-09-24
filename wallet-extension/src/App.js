@@ -6,6 +6,7 @@ import CreateWallet from './components/createWallet';
 import RecoverWallet from './components/recoverWallet';
 import Wallet from './components/wallet';
 import Apophis_logo from './assets/apophis.jpg';
+import Kyc from './components/kyc';
 function App() {
   const [wallet, setWallet] = useState(null);
   const [seedPhrase, setSeedPhrase] = useState(null);
@@ -46,6 +47,7 @@ function App() {
         </Routes> : <Routes>
           <Route path={"/"} element={<Home/>}/>
           <Route path={"/recover"} element={<RecoverWallet setSeedPhrase={setSeedPhrase} setWallet={setWallet}/>}/>
+          <Route path={"/kyc"} element={<Kyc/>}/>
           <Route path={"/wallet"} element={<CreateWallet setSeedPhrase={setSeedPhrase} setWallet={setWallet}/>}/>
         </Routes>
       }

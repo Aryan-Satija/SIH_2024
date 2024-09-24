@@ -14,7 +14,7 @@ const Home = () => {
         <div className='my-8 flex flex-row items-center gap-4'>
             <Button
                 onClick={()=>{
-                    navigate("/wallet");
+                    navigate("/kyc");
                 }}
                 type='primary'
             >

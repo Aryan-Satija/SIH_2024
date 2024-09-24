@@ -15,7 +15,7 @@ const CreateWallet = ({ setSeedPhrase, setWallet }) => {
     const finalizeWallet = () => {
         setSeedPhrase(newSeedPhrase);
         setWallet(ethers.Wallet.fromPhrase(newSeedPhrase).address);
-        navigate("/");
+        navigate("/wallet");
     };
 
     const copyToClipboard = () => {
@@ -74,7 +74,7 @@ const CreateWallet = ({ setSeedPhrase, setWallet }) => {
             }
             <div className='flex flex-col items-center gap-2'>
                 <div onClick={finalizeWallet}>
-                    <Button type='primary'>Create Wallet</Button>
+                    <Button type='primary' disabled={newSeedPhrase === null}>Create Wallet</Button>
                 </div>
                 <div onClick={generateWallet}>
                     <Button type='default'>Generate Seed Phrase</Button>
