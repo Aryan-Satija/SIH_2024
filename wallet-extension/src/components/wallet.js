@@ -4,6 +4,7 @@ import { TbCopyCheck } from "react-icons/tb";
 import { Button, Input, List, message } from 'antd';
 import { Tabs, Avatar } from "antd";
 import {useNavigate} from 'react-router-dom';
+import {ethers} from 'ethers';
 const Wallet = ({
   wallet,
   setWallet,
@@ -25,7 +26,7 @@ const Wallet = ({
       setBalance(data);
     })();
   }, [selectedChain]);
-
+  const [hash, setHash] = useState("");
 
   const logout = async()=>{
     setWallet(null);
@@ -120,7 +121,29 @@ const Wallet = ({
             }}/>
           </div>
           <div>
-              <Button type='dashed' className='w-full' onChange={()=>{
+              <Button type='dashed' className='w-full' onClick={async()=>{
+                  try{
+                    if(amount === 0 || address === "" || selectedChain !== "0xAA36A7"){ 
+                      message.error("Transactions Failed");
+                      return;
+                    }
+                    message.loading("loading...");
+                    const chain = "https://eth-sepolia.g.alchemy.com/v2/GRIRfkS8p_KDIhtPgEcauWBfjucLFolH";
+                    const provider = new ethers.JsonRpcProvider(chain);
+                    const privateKey = ethers.Wallet.fromPhrase(seedPhrase).privateKey;
+                    const wallet = new ethers.Wallet(privateKey, provider);
+                    const transaction = await wallet.sendTransaction({
+                      to: address,
+                      value: ethers.parseEther(amount)
+                    });
+                    setHash(transaction.hash);
+                    const receipt = await transaction.wait();
+                    console.log(receipt);
+                    message.success("transaction successful");
+                  } catch(err){
+                    console.log(err);
+                    message.error("Transactions Failed");
+                  }
 
               }}>
                 Submit
