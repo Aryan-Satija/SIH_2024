@@ -29,6 +29,8 @@ app.get("/getFunds", async(req, res)=>{
         chain: chain,
         address: userAddress
     });
+    
+    console.log(balance.raw);
 
     return res.status(200).json({
         tokens: tokens.raw,

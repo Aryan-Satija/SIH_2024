@@ -9,5 +9,8 @@
   },
   "permissions": [
     "storage"
-  ]
+  ],
+  "icons":{
+    "16": "apophis_mini.webp"
+  }
 }

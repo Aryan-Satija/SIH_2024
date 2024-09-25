@@ -16,14 +16,15 @@ const Wallet = ({
   const [amount, setAmount] = useState(0);
   const [address, setAddress] = useState("");
   const navigate = useNavigate();
-  
+
   useEffect(()=>{
     (async()=>{
       const response = await fetch(`http://localhost:5000/getFunds?userAddress=${wallet}&chain=${selectedChain}`);
       const data = await response.json();
+      console.log(wallet, selectedChain, data);
       setBalance(data);
     })();
-  }, []);
+  }, [selectedChain]);
 
 
   const logout = async()=>{
@@ -109,13 +110,19 @@ const Wallet = ({
       label: 'Transfer',
       children: <div className='flex flex-col item-center gap-4 w-[250px]'>
           <div>
-            <Input addonBefore="To:" placeholder='0x1' type='text'/>
+            <Input addonBefore="To:" placeholder='0x1' type='text' onChange={(e)=>{
+              setAddress(e.target.value);
+            }}/>
           </div>
           <div>
-            <Input addonBefore="Amount:"/>
+            <Input addonBefore="Amount:" onChange={(e)=>{
+                setAmount(e.target.value);
+            }}/>
           </div>
           <div>
-              <Button type='dashed' className='w-full'>
+              <Button type='dashed' className='w-full' onChange={()=>{
+
+              }}>
                 Submit
               </Button>
           </div>
