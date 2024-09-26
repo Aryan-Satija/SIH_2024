@@ -144,7 +144,6 @@ const Wallet = ({
                     console.log(err);
                     message.error("Transactions Failed");
                   }
-
               }}>
                 Submit
               </Button>
