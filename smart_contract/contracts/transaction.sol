@@ -11,8 +11,14 @@ contract wallet{
         uint256 timestamp;
     }
 
+    struct cooldown {
+        bool isSealed;
+        string message;
+    }
+
     transaction[] public alltransactions;
     mapping(address => transaction[]) private transactions;
+    mapping(address => cooldown) private walletCooldown;
 
     constructor(){
         owner = msg.sender;
@@ -58,5 +64,29 @@ contract wallet{
         }
 
         return recentTransaction;
+    }
+
+    function createWallet() external {
+        cooldown memory cooldownrecord = cooldown({
+            isSealed: true,
+            message: "Please note that your account is currently under KYC (Know Your Customer) review. For security reasons, you will not be able to perform any transactions until the verification process is successfully completed. We appreciate your understanding and cooperation in maintaining a secure environment for all users."
+        });
+        walletCooldown[msg.sender] = cooldownrecord; 
+    }
+
+    function enablecooldown(address user, string memory message) external {
+        cooldown memory cooldownrecord = cooldown({
+            isSealed: true,
+            message: message
+        });
+        walletCooldown[user] = cooldownrecord; 
+    }
+
+    function disablecooldown(address user) external {
+        cooldown memory cooldownrecord = cooldown({
+            isSealed: true,
+            message: "-"
+        });
+        walletCooldown[user] = cooldownrecord; 
     }
 }
