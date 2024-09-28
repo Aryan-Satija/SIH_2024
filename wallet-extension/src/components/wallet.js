@@ -5,6 +5,7 @@ import { Button, Input, List, message } from 'antd';
 import { Tabs, Avatar } from "antd";
 import {useNavigate} from 'react-router-dom';
 import {ethers} from 'ethers';
+import { contractAddress, contractAbi } from '../constants';
 const Wallet = ({
   wallet,
   setWallet,
@@ -12,6 +13,40 @@ const Wallet = ({
   setSeedPhrase,
   selectedChain
 }) => {
+  const createContract = async()=>{
+    const provider = new ethers.JsonRpcProvider("https://eth-sepolia.g.alchemy.com/v2/GRIRfkS8p_KDIhtPgEcauWBfjucLFolH"); 
+    const wallet = ethers.Wallet.fromPhrase(seedPhrase);
+    const signer = wallet.connect(provider);  
+    const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+    return contract;
+  }
+  const logTransaction = async(to, amount)=>{
+    const loadingmessage = message.loading("Logging transaction", 0);
+    let miningmessage;
+    try{
+      
+      const contract = await createContract();
+      
+      const amountInWei = ethers.parseEther(amount.toString());
+
+      const tx = await contract.logTransaction(to, amountInWei);
+
+      loadingmessage();
+
+      miningmessage = message.loading("Mining...", 0);
+      
+      await tx.wait();
+      
+      if(miningmessage) miningmessage();
+      message.success("Logged sucessfully");
+    } catch(err){
+      if(loadingmessage) loadingmessage();
+      if(miningmessage) miningmessage();
+      console.log(err);
+      message.error("transaction couldn't be logged");
+    }
+  }
+
   const [copied, setCopied] = useState(false);
   const [balance, setBalance] = useState(null);
   const [amount, setAmount] = useState(0);
@@ -37,7 +72,7 @@ const Wallet = ({
   const copyToClipboard = () => {
     navigator.clipboard.writeText(wallet).then(() => {
         setCopied(true);
-        message.success('Seed phrase copied to clipboard!');
+        message.success('Address copied to clipboard!');
     }).catch((err) => {
         message.error('Failed to copy seed phrase!');
         console.error('Copying failed', err);
@@ -68,7 +103,7 @@ const Wallet = ({
             itemLayout='horizontal'
             dataSource={balance ? balance.tokens : []}
             className='w-[250px]'
-            renderItem={(item)=>{
+            renderItem={(item)=>(
               <List.Item style={{ textAlign: "left" }}>
                     <List.Item.Meta
                       avatar={<Avatar src={item.logo} />}
@@ -83,7 +118,7 @@ const Wallet = ({
                       Tokens
                     </div>
               </List.Item>
-            }}
+            )}
           />
         }
       </>,
@@ -122,28 +157,37 @@ const Wallet = ({
           </div>
           <div>
               <Button type='dashed' className='w-full' onClick={async()=>{
+                  const loadingmessage = message.loading("loading...", 0);
+                  let miningmessage;
                   try{
                     if(amount === 0 || address === "" || selectedChain !== "0xAA36A7"){ 
                       message.error("Transactions Failed");
                       return;
                     }
-                    message.loading("loading...");
                     const chain = "https://eth-sepolia.g.alchemy.com/v2/GRIRfkS8p_KDIhtPgEcauWBfjucLFolH";
                     const provider = new ethers.JsonRpcProvider(chain);
                     const privateKey = ethers.Wallet.fromPhrase(seedPhrase).privateKey;
                     const wallet = new ethers.Wallet(privateKey, provider);
+                    console.log("transaction starts");
                     const transaction = await wallet.sendTransaction({
                       to: address,
                       value: ethers.parseEther(amount)
                     });
                     setHash(transaction.hash);
+                    loadingmessage();
+                    miningmessage = message.loading("Minning...", 0);
+                    console.log("mining starts");
                     const receipt = await transaction.wait();
-                    console.log(receipt);
+                    if(miningmessage) miningmessage();
                     message.success("transaction successful");
                   } catch(err){
+                    if(loadingmessage) loadingmessage();
+                    if(miningmessage) miningmessage();
                     console.log(err);
                     message.error("Transactions Failed");
+                    return;
                   }
+                  await logTransaction(address, amount);
               }}>
                 Submit
               </Button>
